@@ -67,7 +67,7 @@ Here Vehicle-Schedule-Route creates a form of relationship which can be used to 
 *Pre requisite*
 - It is absolutely necessary to have your postgres server running and the database already created. If not, execute the following command in your posgres terminal. `create database <your_database_name>`
 - sample .env & .env.test file is added in the repository, which you need to change
-- have Node installed in your machine
+- have Node installed in your machine (tested w/ v16.16.0)
 
 - Test environment generally uses a dedicated dispensable database. it is given on .env.test file
 

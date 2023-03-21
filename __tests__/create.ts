@@ -2,8 +2,6 @@ import request from 'supertest'
 import app from '../src/index'
 
 beforeAll(async () => {
-  // create product categories
-
   console.log('✨ Database URL: ', process.env.DATABASE_URL)
 })
 

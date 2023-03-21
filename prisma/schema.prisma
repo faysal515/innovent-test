@@ -1,0 +1,79 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum DayOfWeek {
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+  SUNDAY
+}
+
+enum VehicleType {
+  SUV
+  SEDAN
+}
+
+enum VehicleCategory {
+  STANDARD
+  STANDBY
+  WHEELCHAIR
+}
+
+model Vehicle {
+  id                String          @id @default(uuid()) @db.Uuid
+  type              VehicleType
+  category          VehicleCategory
+  status            String          @default("AVAILABLE")
+  createdAt         DateTime        @default(now())
+  schedules         Schedule[]      @relation("VehicleSchedules")
+  currentSchedule   Schedule?       @relation("VehicleCurrentSchedule", fields: [currentScheduleId], references: [id])
+  currentScheduleId String?         @db.Uuid
+}
+
+model Schedule {
+  id             String    @id @default(uuid()) @db.Uuid
+  startDay       DayOfWeek
+  endDay         DayOfWeek
+  startTime      String
+  endTime        String
+  route          Route[]
+  Vehicle        Vehicle?  @relation("VehicleSchedules", fields: [vehicleId], references: [id])
+  vehicleId      String?   @db.Uuid
+  CurrentVehicle Vehicle[] @relation("VehicleCurrentSchedule")
+}
+
+model Route {
+  id            String   @id @default(uuid()) @db.Uuid
+  schedule      Schedule @relation(fields: [scheduleId], references: [id])
+  scheduleId    String   @db.Uuid
+  startLocation String
+  endLocation   String
+  coordinates   Json     @db.Json
+}
+
+model OrderRequest {
+  id            String          @id @default(uuid()) @db.Uuid
+  startLocation String
+  endLocation   String
+  count         Int
+  type          VehicleType
+  category      VehicleCategory
+  scheduleStart DateTime
+  scheduleEnd   DateTime
+  timeStart     String
+  timeEnd       String
+  dayStart      DayOfWeek
+  dayEnd        DayOfWeek
+  status        String          @default("PENDING")
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+}
